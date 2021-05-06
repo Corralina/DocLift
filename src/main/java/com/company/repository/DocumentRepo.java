@@ -17,7 +17,7 @@ public interface DocumentRepo extends JpaRepository<Document, Long> {
     Iterable<Document> findAllByNumberLikeAndAuthorInformationPersonInitialsLike(String number, String autor, Sort sort);
     Iterable<Document> findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndResolution(String number, String autor, Boolean res, Sort sort);
 
-    Iterable<Document> findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndDate(String number, String autor, LocalDate date, Sort sort);
+    Iterable<Document> findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndDate(String number, String autor, LocalDate date);
     Iterable<Document> findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndDateAndResolution(String number, String autor, LocalDate date, Boolean satus, Sort sort);
 
 

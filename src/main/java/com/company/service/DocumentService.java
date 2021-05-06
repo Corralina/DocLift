@@ -31,7 +31,7 @@ public class DocumentService {
     }
 
     public Iterable<Document> filterOneDate(String number, String autor, LocalDate date){
-        return documentRepo.findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndDate("%" + number + "%", "%" + autor + "%", date, Sort.by(Sort.Direction.DESC, "date"));
+        return documentRepo.findAllByNumberLikeAndAuthorInformationPersonInitialsLikeAndDate("%" + number + "%", "%" + autor + "%", date);
     }
 
     public Iterable<Document> filterNoDate(String number, String autor){

@@ -1,28 +1,16 @@
 package com.company.controllers.document;
 
-import com.company.dataService.DataToday;
-import com.company.domian.Document;
 import com.company.domian.User;
-import com.company.fileService.SaveFileDocument;
 import com.company.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.security.RolesAllowed;
-import javax.jws.soap.SOAPBinding;
-import javax.management.relation.Role;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Map;
 
 @Controller
 @RequestMapping("document")
@@ -31,11 +19,6 @@ public class DocumentController {
     @Autowired
     public DocumentService documentService;
 
-    @Autowired
-    private SaveFileDocument saveFileDocument;
-
-    @Autowired
-    private DataToday dataToday;
 
     @GetMapping
     public String list(
@@ -66,12 +49,12 @@ public class DocumentController {
                 model.addAttribute("documents", documentService.filterNoDate(number, autor));
             } else if (dataStart == dataFinish || dataStart == null || dataFinish == null) {
                 if (dataStart == null) {
-                    model.addAttribute("documents", documentService.filterOneDate(number, autor, LocalDate.parse(dataFinish)));
+                    model.addAttribute("documents", documentService.filterOneDate(number, autor, LocalDate.parse(dataFinish).plusDays(1)));
                 } else {
-                    model.addAttribute("documents", documentService.filterOneDate(number, autor, LocalDate.parse(dataStart)));
+                    model.addAttribute("documents", documentService.filterOneDate(number, autor, LocalDate.parse(dataStart).plusDays(1)));
                 }
             } else {
-                model.addAttribute("documents", documentService.filterAll(number, autor, LocalDate.parse(dataStart), LocalDate.parse(dataFinish)));
+                model.addAttribute("documents", documentService.filterAll(number, autor, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2)));
             }
         }else{
             boolean st = false;
@@ -84,12 +67,12 @@ public class DocumentController {
                 model.addAttribute("documents", documentService.filterNoDateStatus(number, autor, st));
             } else if (dataStart == dataFinish || dataStart == null || dataFinish == null) {
                 if (dataStart == null) {
-                    model.addAttribute("documents", documentService.filterOneDateStatus(number, autor, LocalDate.parse(dataFinish), st));
+                    model.addAttribute("documents", documentService.filterOneDateStatus(number, autor, LocalDate.parse(dataFinish).plusDays(1), st));
                 } else {
-                    model.addAttribute("documents", documentService.filterOneDateStatus(number, autor, LocalDate.parse(dataStart), st));
+                    model.addAttribute("documents", documentService.filterOneDateStatus(number, autor, LocalDate.parse(dataStart).plusDays(1), st));
                 }
             } else {
-                model.addAttribute("documents", documentService.filterAllStatus(number, autor, LocalDate.parse(dataStart), LocalDate.parse(dataFinish), st));
+                model.addAttribute("documents", documentService.filterAllStatus(number, autor, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2), st));
             }
 
         }
@@ -98,52 +81,6 @@ public class DocumentController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('RECORTED')")
-    @GetMapping("/new")
-    public String newDocument(@AuthenticationPrincipal User user, Model model){
 
-        model.addAttribute("roles", user.getRoles());
-
-        return "document/new";
-
-    }
-
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('RECORTED')")
-    public String create(
-            @ModelAttribute("document") @Valid Document document,
-            BindingResult bindingResult,
-            @AuthenticationPrincipal User user,
-            @RequestParam("file") MultipartFile file,
-            Model model
-            ) throws IOException, ParseException {
-
-        if (!file.getOriginalFilename().matches(".*pdf")){
-            model.addAttribute("error","Невiдповiдний формат файлу!!! Файл повинен бути у форматi pdf");
-            return "document/new";
-        }
-        if (documentService.findByNumber(document.getNumber()) != null){
-            model.addAttribute("error","Невiдповiдний ім'я файлу!!! Файл з таким іменем уже існує");
-            return "document/new";
-        }
-
-
-        document.setName(saveFileDocument.uploadDocument(file));
-        document.setDate(dataToday.dateToday());
-        document.setTelegram(false);
-        document.setResolution(false);
-        document.setAuthor(user);
-
-        if (bindingResult.hasErrors()){
-            model.addAttribute("error",bindingResult.getFieldError().getDefaultMessage());
-            return "document/new";
-        }
-
-        documentService.save(document);
-
-        return "redirect:document";
-
-    }
 
 }

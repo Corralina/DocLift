@@ -12,21 +12,21 @@
             <#if isLog>
 
                 <li class="nav-item">
-                    <a class="nav-link" id="" href="/resolutionList" title="Список моїх резолюцій"><img src="/static/text-document-check.svg" alt=""></a>
+                    <a class="nav-link" id="" href="/resolutionList" title="Список моїх резолюцій"><img src="/static/text-document-check.svg" alt=""/></a>
                 </li>
 
                 <#if isRecorted || isAdmin>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="list_users" href="/allResolutionList" title="Список користувачів"><img src="/static/adminList.svg" alt=""></a>
+                        <a class="nav-link" id="list_users" href="/allResolutionList" title="Список користувачів"><img src="/static/adminList.svg" alt=""/></a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="add_doc" href="/createDocument" title="Додати документ"><img src="/static/text-document-add.svg" alt=""></a>
+                        <a class="nav-link" id="add_doc" href="/createDocument" title="Додати документ"><img src="/static/text-document-add.svg" alt=""/></a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="add_doc" href="/documentArchive" title="Архів документів"><img src="/static/archive.svg" alt=""></a>
+                        <a class="nav-link" id="add_doc" href="/documentArchive" title="Архів документів"><img src="/static/archive.svg" alt=""/></a>
                     </li>
 
                 </#if>
@@ -34,7 +34,7 @@
                 <#if isTablin || isConfirm || isAdmin>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="" href="/resolutionList/status" title="Список непогоджених резолюцій"><img src="/static/edit-document.svg" alt=""></a>
+                        <a class="nav-link" id="" href="/resolutionList/status" title="Список непогоджених резолюцій"><img src="/static/edit-document.svg" alt=""/></a>
                     </li>
 
                 </#if>
@@ -42,7 +42,7 @@
                 <#if isAdmin || isTablin>
 
                 <li class="nav-item">
-                    <a class="nav-link" id="list_docs" href="/documentList" title="Список документів"><img src="/static/text-documents-line.svg" alt=""></a>
+                    <a class="nav-link" id="list_docs" href="/documentList" title="Список документів"><img src="/static/text-documents-line.svg" alt=""/></a>
                 </li>
 
                 </#if>
@@ -50,13 +50,13 @@
                 <#if isAdmin>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="list_users" href="/userList" title="Список користувачів"><img src="/static/group.svg" alt=""></a>
+                        <a class="nav-link" id="list_users" href="/userList" title="Список користувачів"><img src="/static/group.svg" alt=""/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="user_reg" href="/registration" title="Реєстрація користувача"><img src="/static/wondicon-ui-free-add-user_111248.svg" alt=""></a>
+                        <a class="nav-link" id="user_reg" href="/registration" title="Реєстрація користувача"><img src="/static/wondicon-ui-free-add-user_111248.svg" alt=""/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="user_reg" href="/userSending" title="Зміна користувача"><img src="/static/telegramSetting.svg" alt=""></a>
+                        <a class="nav-link" id="user_reg" href="/userSending" title="Зміна користувача"><img src="/static/telegramSetting.svg" alt=""/></a>
                     </li>
 
                 </#if>
