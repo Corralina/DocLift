@@ -12,12 +12,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,8 +32,6 @@ public class DocumentControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private DocumentController controller;
 
     @Test
     @WithUserDetails("user")
@@ -50,6 +50,50 @@ public class DocumentControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    @WithUserDetails("recorted")
+    public void createDocument() throws Exception{
+        MockHttpServletRequestBuilder multipart = multipart("/document")
+                .file("file", "123.pdf".getBytes())
+                .param("number", "3/3/3")
+                .param("coment", "document")
+                .with(csrf());
+
+        this.mockMvc.perform(multipart)
+                .andDo(print())
+                .andExpect(authenticated());
+
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    public void createDocumentAdmin() throws Exception{
+        MockHttpServletRequestBuilder multipart = multipart("/document")
+                .file("file", "123.pdf".getBytes())
+                .param("number", "3/3/3")
+                .param("coment", "document")
+                .with(csrf());
+
+        this.mockMvc.perform(multipart)
+                .andDo(print())
+                .andExpect(authenticated());
+
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void createDocumentUser() throws Exception{
+        MockHttpServletRequestBuilder multipart = multipart("/document")
+                .file("file", "123.pdf".getBytes())
+                .param("number", "3/3/3")
+                .param("coment", "document")
+                .with(csrf());
+
+        this.mockMvc.perform(multipart)
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+    }
 
 
 
