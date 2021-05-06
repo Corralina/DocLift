@@ -82,7 +82,7 @@ public class ResolutionController {
                 model.addAttribute("resolutions", resolutionService.filterOneDate(number, autor, confirm, true, LocalDate.parse(dataStart)));
             }
         } else {
-            model.addAttribute("resolutions", resolutionService.filterAll(number, autor, confirm, true, LocalDate.parse(dataStart), LocalDate.parse(dataFinish)));
+            model.addAttribute("resolutions", resolutionService.filterAll(number, autor, confirm, true, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2)));
         }
 
 

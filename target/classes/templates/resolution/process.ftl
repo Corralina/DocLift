@@ -13,32 +13,32 @@
         <div class="d-flex flex-row justify-content-around">
             <div class="form-group d-flex flex-column my_filter_input" >
                 <label for="dateStart">Дата з</label>
-                <input name="dateStart" value="${ds?ifExists}"  type="date"  class="form-control" id="dateStart" aria-describedby="inputGroup-sizing-default">
+                <input name="dateStart" value="${ds?ifExists}"  type="date"  class="form-control" id="dateStart" aria-describedby="inputGroup-sizing-default"/>
             </div>
             <div class="form-group d-flex flex-column my_filter_input" >
                 <label for="dateFinish">Дата по</label>
-                <input name="dateStop" value="${df?ifExists}"  type="date"  class="form-control" id="dateFinish" aria-describedby="inputGroup-sizing-default">
+                <input name="dateStop" value="${df?ifExists}"  type="date"  class="form-control" id="dateFinish" aria-describedby="inputGroup-sizing-default"/>
             </div>
             <div class="form-group d-flex flex-column my_filter_input" >
                 <label for="c">Керівник</label>
-                <input name="confirm" value="${c?ifExists}"  type="text" class="form-control" id="c" aria-describedby="inputGroup-sizing-default">
+                <input name="confirm" value="${c?ifExists}"  type="text" class="form-control" id="c" aria-describedby="inputGroup-sizing-default"/>
             </div>
         </div>
 
         <div class="d-flex flex-row justify-content-around">
             <div class="form-group d-flex flex-column my_filter_input" >
                 <label for="n">Номер</label>
-                <input name="number" value="${n?ifExists}"  type="text" class="form-control" id="n" aria-describedby="inputGroup-sizing-default">
+                <input name="number" value="${n?ifExists}"  type="text" class="form-control" id="n" aria-describedby="inputGroup-sizing-default"/>
             </div>
             <div class="form-group d-flex flex-column my_filter_input" >
                 <label for="a">Автор</label>
-                <input name="autor" value="${a?ifExists}"  type="text" class="form-control" id="a" aria-describedby="inputGroup-sizing-default">
+                <input name="autor" value="${a?ifExists}"  type="text" class="form-control" id="a" aria-describedby="inputGroup-sizing-default"/>
             </div>
             <div class="row p-3 mt-2 my_filter_button" >
                 <button class="btn btn-primary my_button" id="search" type="submit" >Пошук</button>
             </div>
         </div>
-        <input type="hidden" value="${_csrf.token}" name="_csrf">
+        <input type="hidden" value="${_csrf.token}" name="_csrf"/>
     </div>
 
     <div class="mt-5 shadow-lg mb-5 bg-white rounded p-3">
@@ -85,53 +85,7 @@
 
     <script type="text/javascript" charset="utf8" src="/static/main.js"></script>
     <script type="text/javascript" charset="utf8" src="/static/pathCorrect.js"></script>
-    <script type="text/javascript">
-        document.getElementById("search").addEventListener("click", function (ev) {
-            var c = 0;
-            var req = "http://localhost:8080/resolution/process";
-            if (document.getElementById("dateStart").value != ""){
-                req += "?ds=" + document.getElementById("dateStart").value;
-                c = 1;
-            }
-            if (document.getElementById("dateFinish").value != ""){
-                if (c == 1){
-                    req += "&";
-                }else {
-                    req += "?";
-                    c = 1;
-                }
-                req += "df=" + document.getElementById("dateFinish").value;
-            }
-            if (document.getElementById("n").value != ""){
-                if (c == 1){
-                    req += "&";
-                }else {
-                    req += "?";
-                    c = 1;
-                }
-                req += "n=" + document.getElementById("n").value
-            }
-            if (document.getElementById("a").value != ""){
-                if (c == 1){
-                    req += "&";
-                }else {
-                    req += "?";
-                    c = 1;
-                }
-                req += "a=" + document.getElementById("a").value
-            }
-            if (document.getElementById("c").value != ""){
-                if (c == 1){
-                    req += "&";
-                }else {
-                    req += "?";
-                    c = 1;
-                }
-                req += "c=" + document.getElementById("c").value
-            }
-            document.location.href = req;
-        })
-    </script>
+    <script type="text/javascript" charset="utf8" src="/static/resolutionProcessSearch.js"></script>
 
 
 
