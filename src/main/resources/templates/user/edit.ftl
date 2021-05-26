@@ -60,7 +60,7 @@
                     <label class="m-3">ЕЦП  <input type="file" name="caption" ></label>
                 </div>
 
-                <#if user.isLoc()>
+<#--                <#if user.isLoc()>-->
                     <div class="border mt-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -77,7 +77,7 @@
                             <input name="password" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                         </div>
                     </div>
-                </#if>
+<#--                </#if>-->
                 <div class="row mt-3">
                     <button class="btn btn-success m-3 " type="submit">Зберегти</button>
                 </div>

@@ -10,7 +10,7 @@ import java.time.LocalTime;
 public class DataToday {
 
     public LocalDate dateToday() throws ParseException {
-        LocalDate myObj = LocalDate.now();
+        LocalDate myObj = LocalDate.now().plusDays(1);
 
         return myObj;
     }

@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("resolution")
@@ -52,6 +51,7 @@ public class ResolutionController {
             @RequestParam(value = "n", required = false) String number,
             @RequestParam(value = "a", required = false) String autor,
             @RequestParam(value = "c", required = false) String confirm,
+            @AuthenticationPrincipal User user,
             Model model
     ){
 
@@ -71,19 +71,49 @@ public class ResolutionController {
             confirm = "";
         }
 
-        if (dataStart == null && dataFinish == null && number == "" && autor == "" && confirm == "") {
-            model.addAttribute("resolutions", resolutionService.allStatusFinish(true));
-        } else if (dataStart == null && dataFinish == null) {
-            model.addAttribute("resolutions", resolutionService.filterNoDate(number, autor, confirm, true));
-        } else if (dataStart == dataFinish || dataStart == null || dataFinish == null) {
-            if (dataStart == null) {
-                model.addAttribute("resolutions", resolutionService.filterOneDate(number, autor, confirm, true, LocalDate.parse(dataFinish)));
+        if (user.isAdmin() || user.isResolve() || user.isConfirm() || user.isTablin()){
+            if (dataStart == null && dataFinish == null && number == "" && autor == "" && confirm == "") {
+                model.addAttribute("resolutions", resolutionService.allStatusFinish(true));
+            } else if (dataStart == null && dataFinish == null) {
+                model.addAttribute("resolutions", resolutionService.filterNoDate(number, autor, confirm, true));
+            } else if (dataStart == dataFinish || dataStart == null || dataFinish == null) {
+                if (dataStart == null) {
+                    model.addAttribute("resolutions", resolutionService.filterOneDate(number, autor, confirm, true, LocalDate.parse(dataFinish)));
+                } else {
+                    model.addAttribute("resolutions", resolutionService.filterOneDate(number, autor, confirm, true, LocalDate.parse(dataStart)));
+                }
             } else {
-                model.addAttribute("resolutions", resolutionService.filterOneDate(number, autor, confirm, true, LocalDate.parse(dataStart)));
+                model.addAttribute("resolutions", resolutionService.filterAll(number, autor, confirm, true, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2)));
             }
-        } else {
-            model.addAttribute("resolutions", resolutionService.filterAll(number, autor, confirm, true, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2)));
+        }else{
+            Iterable<Performer> performers;
+            if (dataStart == null && dataFinish == null && number == "" && autor == "" && confirm == "") {
+                performers = performerService.allStatusFinish(user,true);
+
+            } else if (dataStart == null && dataFinish == null) {
+                performers = performerService.filterNoDate(user, number, autor, confirm, true);
+            } else if (dataStart == dataFinish || dataStart == null || dataFinish == null) {
+                if (dataStart == null) {
+                    performers = performerService.filterOneDate(user, number, autor, confirm, true, LocalDate.parse(dataFinish));
+                } else {
+                    performers = performerService.filterOneDate(user, number, autor, confirm, true, LocalDate.parse(dataStart));
+                }
+            } else {
+                performers = performerService.filterAll(user, number, autor, confirm, true, LocalDate.parse(dataStart), LocalDate.parse(dataFinish).plusDays(2));
+            }
+
+            List<Resolution> res = new ArrayList<>();
+            Iterator<Performer> p = performers.iterator();
+            while( p.hasNext()){
+                        Resolution resol = p.next().getResolution();
+                        res.add(resol);
+                    }
+
+            model.addAttribute("resolutions", res);
+
         }
+
+
 
 
         return "resolution/list";
@@ -168,7 +198,8 @@ public class ResolutionController {
     ){
 
         if (document.getResolution()){
-            return "redirect:menu";
+            model.addAttribute("error", "Даний документ уже розписано");
+            return "redirect:/document";
         }
 
         model.addAttribute("document", document);
@@ -191,7 +222,7 @@ public class ResolutionController {
             ) throws ParseException {
 
         if (document.getResolution()){
-            return "redirect:document";
+            return "redirect:/document";
         }
 
         Status status = new Status();
@@ -221,7 +252,7 @@ public class ResolutionController {
             }
         }
 
-        return "redirect:resolution";
+        return "redirect:/resolution";
     }
 
 

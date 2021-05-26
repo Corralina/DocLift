@@ -71,7 +71,7 @@ public class UpdateUserData {
             //Для перевірки чи це людина, може бути наприклад зал
             if(!givenname.equals("ull")){
 
-                StringBuilder sam = new StringBuilder(String.valueOf(attrs.get("samAccountName")));
+                StringBuilder sam = new StringBuilder(String.valueOf(attrs.get("mail")));
                 sam.delete(0,sam.indexOf(": ") + 2);
 
                 StringBuilder mail = new StringBuilder(String.valueOf(attrs.get("mail")));
@@ -155,7 +155,7 @@ public class UpdateUserData {
             }
 
         }
-        return "redirect:user";
+        return "redirect:/user";
     }
 
 

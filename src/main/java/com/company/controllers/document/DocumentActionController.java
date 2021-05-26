@@ -77,7 +77,7 @@ public class DocumentActionController {
 
         documentService.save(document);
 
-        return "redirect:document";
+        return "redirect:/document";
 
     }
 }

@@ -63,7 +63,7 @@
                         <a class="nav-link" id="add_doc" href="/pdf/${resolution?ifExists.document?ifExists.name?ifExists}" title="Відкрити документ" target="_blank"><img src="/static/openDocument.svg" alt=""></a>
                         <#--                        <a class="nav-link" id="add_doc" href="/img/${resolution?ifExists.document?ifExists.image?ifExists}" title="Відкрити картинку" target="_blank"><img src="/static/openImage.svg" alt=""></a>-->
                     </div>
-                    <form action="/resolutionForm" method="post" enctype="multipart/form-data">
+                    <form action="/resolution/form" method="post" enctype="multipart/form-data">
                         <#if resolution.agrees.information.person.caption?ifExists??>
                             <input type="checkbox" id="cap" name="cap" checked>
                             <label style="font-size: 1rem" for="cap">Присутність підпису</label>

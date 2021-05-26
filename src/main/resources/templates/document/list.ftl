@@ -72,18 +72,18 @@
                 <td><div class="rounded mt-2 shadow-lg mb-2 rounded my_table_row">${document?ifExists.date?ifExists}</div></td>
                 <td><div class="rounded mt-2 shadow-lg mb-2 rounded my_table_row">${document?ifExists.author?ifExists.information?ifExists.person?ifExists.initials?ifExists}</div></td>
                 <td><div class="rounded mt-2 shadow-lg mb-2 rounded my_table_row">
-                    <#if document.author.username == username>
-                        <a href="/pdf/${document?ifExists.name}" target="_blank">Відкрити файл</a>
-                    <#else>
-                        ---
-                    </#if>
+                        <a href="/pdf/${document?ifExists.name?ifExists}" target="_blank">Відкрити файл</a>
                     </div>
                 </td>
                 <#if user.isAdmin() || user.isRecorted()>
                     <td>
+                        <#if !document.resolution>
                         <div class="rounded mt-2 shadow-lg mb-2 rounded my_table_row">
                             <a class="pathC" href="/resolution/new/${document?ifExists.id}">Розписати</a>
                         </div>
+                        <#else>
+                            ---
+                        </#if>
                     </td>
                 </#if>
             </tr>
@@ -93,6 +93,6 @@
     </div>
 
     <script type="text/javascript" charset="utf8" src="/static/main.js"></script>
-
+    <script type="text/javascript" charset="utf8" src="/static/pathCorrect.js"></script>
     <script type="text/javascript" charset="utf8" src="/static/document-filter.js"></script>
 </@dom.dom>

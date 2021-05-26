@@ -6,6 +6,7 @@ import com.company.domian.Resolution;
 import com.company.domian.User;
 import com.company.repository.PerformerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,5 +26,21 @@ public class PerformerService {
     }
 
     public void drop(Performer performer){performerRepo.delete(performer);}
+
+    public Iterable<Performer> allStatusFinish(User user, Boolean status){
+        return performerRepo.findTop50ByUserAndResolutionStatusFinish(user, status);
+    }
+
+    public Iterable<Performer> filterNoDate(User user, String number, String autor, String agrees, Boolean status){
+        return performerRepo.findAllByUserAndResolutionDocumentNumberLikeAndResolutionFillingInformationPersonInitialsLikeAndResolutionAgreesInformationPersonInitialsLikeAndResolutionStatusFinish(user,"%" + number + "%", "%" + autor + "%", "%" + agrees +"%", status);
+    }
+
+    public Iterable<Performer> filterOneDate(User user, String number, String autor, String agrees, Boolean status, LocalDate date){
+        return performerRepo.findAllByUserAndResolutionDocumentNumberLikeAndResolutionFillingInformationPersonInitialsLikeAndResolutionAgreesInformationPersonInitialsLikeAndResolutionStatusFinishAndResolutionDate(user, "%" + number + "%", "%" + autor + "%", "%" + agrees +"%", status, date);
+    }
+
+    public Iterable<Performer> filterAll(User user, String number, String autor, String agrees, Boolean status, LocalDate start, LocalDate finish){
+        return performerRepo.findAllByUserAndResolutionDocumentNumberLikeAndResolutionFillingInformationPersonInitialsLikeAndResolutionAgreesInformationPersonInitialsLikeAndResolutionStatusFinishAndResolutionDateAfterAndResolutionDateBefore(user, "%" + number + "%", "%" + autor + "%", "%" + agrees +"%", status, start, finish);
+    }
 
 }

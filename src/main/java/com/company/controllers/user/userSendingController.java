@@ -51,6 +51,6 @@ public class userSendingController {
         send.setUser(user);
         sendService.save(send);
 
-        return "redirect:/sending";
+        return "redirect:/userSending";
     }
 }

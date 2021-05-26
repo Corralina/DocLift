@@ -55,7 +55,7 @@
         </tr>
         </thead>
 
-        <tbody>
+        <tbody id='tablebody'>
         <#list resolutions?ifExists as resolution>
             <tr>
                 <td><div class="rounded mt-2 shadow-lg mb-2 rounded my_table_row">

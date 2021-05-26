@@ -3,7 +3,9 @@ package com.company.controllers.resolution;
 
 import com.company.dataService.DataToday;
 import com.company.domian.*;
+import com.company.fileService.createFileResolution;
 import com.company.service.*;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Map;
 
 @Controller
@@ -53,16 +57,16 @@ public class ResolutionEctionController {
     ) throws ParseException {
         if (!resolution.getAgrees().getUsername().equals(user.getUsername()) && !user.isAdmin()){
             model.addAttribute("error","Не достатньо прав!");
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
         }
         if(resolution.getStatus().getFinish()){
             model.addAttribute("error","Резолюцію було завізовано" + resolution.getDate());
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
 
         }
         if (resolution.getStatus().getRevers()){
             model.addAttribute("error","Резолюція знаходиться на редагувані!");
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
 
         }
 
@@ -90,7 +94,7 @@ public class ResolutionEctionController {
         resolutionService.save(resolution);
 
 
-        return "redirect:resolution";
+        return "redirect:/resolution";
     }
 
 
@@ -105,17 +109,17 @@ public class ResolutionEctionController {
 
         if(resolution.getStatus().getFinish()){
             model.addAttribute("error","Резолюцію було завізовано" + resolution.getDate());
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
 
         }
         if (resolution.getStatus().getRevers()){
             model.addAttribute("error","Резолюція вже знаходиться на редагувані!");
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
 
         }
         if (!resolution.getAgrees().getUsername().equals(user.getUsername()) && !user.isAdmin()){
             model.addAttribute("error","Не достатньо прав!");
-            return "redirect:resolution/" + resolution.getId();
+            return "redirect:/resolution/" + resolution.getId();
 
         }
 
@@ -130,7 +134,7 @@ public class ResolutionEctionController {
         revers.setResolution(resolution);
         reversService.save(revers);
 
-        return "redirect:resolution/" + resolution.getId();
+        return "redirect:/resolution/" + resolution.getId();
 
     }
 
@@ -174,7 +178,42 @@ public class ResolutionEctionController {
             }
         }
 
-        return "redirect:resolution";
+        return "redirect:/resolution";
+
+    }
+
+    @PostMapping("form")
+    public String forming(
+            @AuthenticationPrincipal User user,
+            @RequestParam Map<String, String> form,
+            @RequestParam("resolution") Resolution resolution,
+            Model model
+    ) throws DocumentException, IOException {
+        createFileResolution createFileResolution = new createFileResolution();
+        Boolean caption  = false;
+        if (resolution.getAgrees().getInformation().getPerson().getCaption() != null && form.containsKey("cap")){
+            caption = true;
+        }
+        String href = createFileResolution.formRes(resolution, staticService.byVisa(resolution.getVisa()), caption);
+
+
+        model.addAttribute("resolutionFile", href);
+        model.addAttribute("resolution", resolution);
+        model.addAttribute("user", user);
+
+        if (resolution.getStatus().getFinish()){
+            model.addAttribute("revers", reversService.byResolution(resolution));
+            model.addAttribute("statics", staticService.byVisa(resolution.getVisa()));
+            return "resolution/resolution";
+        }
+        model.addAttribute("performers", performerService.byResolution(resolution));
+        if (resolution.getStatus().getRevers() && user.getUsername().equals(resolution.getFilling().getUsername())){
+            model.addAttribute("revers", reversService.byResolutionActiv(resolution));
+            model.addAttribute("users",userService.allUser());
+            model.addAttribute("confirms",userService.userConfirms(Collections.singleton(Role.CONFIRM)));
+            return "resolution/edit";
+        }
+        return "resolution/resolutionProcess";
 
     }
 }

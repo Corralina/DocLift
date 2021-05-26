@@ -88,13 +88,12 @@ public class UserController {
             contact.setPhone(form.get("phone"));
             contact.setMail(form.get("mail"));
 
-            if (user.isLoc()) {
+
                 user.setUsername(form.get("username"));
-                if (form.get("password") != null || !form.get("password").equals("")) {
+                if (!form.get("password").equals("")) {
                     user.setPassword(passwordEncoder.encode(form.get("password")));
                 }
 
-            }
 
             Set<String> roles = Arrays.stream(Role.values())
                     .map(Role::name)
@@ -110,7 +109,7 @@ public class UserController {
             contactService.save(contact);
             userService.userSave(user);
 
-            return "redirect:user";
+            return "redirect:/user";
 
     }
 }
